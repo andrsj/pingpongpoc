@@ -1,0 +1,546 @@
+# Config for golangci-lint metalinter
+
+run:
+  concurrency: 4 # Number of CPUs to use when running golangci-lint.
+
+  timeout: 5m # Timeout for analysis, e.g. 30s, 5m.
+
+  issues-exit-code: 1 # Exit code when at least one issue was found.
+
+  tests: false # Include test files or not.
+
+  skip-dirs: # Which dirs to skip: issues from them won't be reported.
+    - .git
+
+  modules-download-mode: readonly
+
+  # Allow multiple parallel golangci-lint instances running.
+  # If false, golangci-lint acquires file lock on start.
+  allow-parallel-runners: false
+
+output:
+  # format: github-actions # colored-line-number | line-number | json | colored-tab | tab | github-actions(for CI/CD)
+  format: colored-line-number # colored-line-number | line-number | json | colored-tab | tab | github-actions(for CI/CD)
+
+  print-issued-lines: true # Print lines of code with issue.
+
+  print-linter-name: true # Print linter name in the end of issue text.
+
+  uniq-by-line: false # Make issues output unique by line.
+
+  path-prefix: "" # Add a prefix to the output file references.
+
+  sort-results: true # Sort results by: filepath, line and column.
+
+linters:
+  disable-all: true
+
+  enable:
+    # Formats Go programs. Standard part of Go toolchain.
+    # Link: https://golang.org/cmd/gofmt/
+    - gofmt
+
+    # Enforces a stricter format than gofmt, while being backwards compatible.
+    # Link: https://github.com/mvdan/gofumpt
+    - gofumpt
+
+    # Ensures HTTP response bodies are closed.
+    # Link: https://github.com/timakin/bodyclose
+    - bodyclose
+
+    # Detects contexts that are passed but not used within functions.
+    # Additional info: Part of golangci-lint built-ins.
+    - containedctx
+
+    # Checks the use of context.Context in function signatures.
+    # Link: https://github.com/ryancurrah/contextcheck
+    - contextcheck
+
+    # Checks for common mistakes using the encoding/json Decoder.
+    # Additional info: Part of golangci-lint built-ins.
+    - decorder
+
+    # Disallows assigning to blank identifiers.
+    # Link: https://github.com/alexkohler/dogsled
+    - dogsled
+
+    # Checks for unchecked errors.
+    # Link: https://github.com/kisielk/errcheck
+    - errcheck
+
+    # Checks that sentinel errors are prefixed with Err and error types are suffixed with Error.
+    # Link: https://github.com/alexkohler/errname
+    - errname
+
+    # Linter for errors.
+    # Link: https://github.com/polyfloyd/go-errorlint
+    - errorlint
+
+    # Checks for unchecked errors in json.Unmarshal and json.NewDecoder().Decode.
+    # Additional info: Part of golangci-lint built-ins.
+    - errchkjson
+
+    # Checks for pointers to enclosing loop variables.
+    # Link: https://github.com/kyoh86/exportloopref
+    - exportloopref
+
+    # Forbids specific identifiers.
+    # Link: https://github.com/ashanbrown/forbidigo
+    - forbidigo
+
+    # Forces type assertion and assignment to be checked.
+    # Additional info: Part of golangci-lint built-ins.
+    - forcetypeassert
+
+    # Prohibits global variables.
+    # Link: https://github.com/leighmcculloch/gochecknoglobals
+    - gochecknoglobals
+
+    # Prohibits init functions.
+    # Link: https://github.com/leighmcculloch/gochecknoinits
+    - gochecknoinits
+
+    # Ensures that all top-level comments are punctuated.
+    # Link: https://github.com/tetafro/godot
+    - godot
+
+    # Requires that errors are created with fmt.Errorf and error variables are global constants.
+    # Link: https://github.com/Djarvur/go-err113
+    - goerr113
+
+    # Computes and checks the cyclomatic complexity of functions.
+    # Link: https://github.com/bkielbasa/cyclop
+    - cyclop
+
+    # Checks whether all struct's fields are initialized.
+    # Link: https://github.com/sivchari/exhaustruct
+    - exhaustruct
+
+    # Checks for long functions.
+    # Link: https://github.com/ultraware/funlen
+    - funlen
+
+    # Finds repeated strings that could be replaced by a constant.
+    # Link: https://github.com/jgautheron/goconst
+    - goconst
+
+    # Computes and checks the cognitive complexity of functions.
+    # Link: https://github.com/uudashr/gocognit
+    - gocognit
+
+    # The most opinionated Go source code linter.
+    # Link: https://github.com/go-critic/go-critic
+    - gocritic
+
+    # Calculates cyclomatic complexities of functions.
+    # Link: https://github.com/fzipp/gocyclo
+    - gocyclo
+
+    # Tool to fix (add, remove) your Go imports automatically.
+    # Link: https://golang.org/x/tools/cmd/goimports
+    - goimports
+
+    # Prints out coding style mistakes in Go source code.
+    # Link: https://github.com/golang/lint
+    - golint
+
+    # Magic number detector.
+    # Link: https://github.com/tommy-muehle/go-mnd
+    - gomnd
+
+    # Inspects source code for security problems.
+    # Link: https://github.com/securego/gosec
+    - gosec
+
+    # Simplifies code.
+    # Link: https://github.com/dominikh/go-tools/tree/master/simple
+    - gosimple
+
+    # Examines Go source code and reports suspicious constructs, part of the Go toolchain.
+    # Link: https://golang.org/cmd/vet/
+    - govet
+
+    # Detects ineffectual assignments in Go code.
+    # Link: https://github.com/gordonklaus/ineffassign
+    - ineffassign
+
+    # Enforces consistent return types.
+    # Link: https://github.com/butuzov/ireturn
+    - ireturn
+
+    # Line length linter, enforces a maximum line length.
+    # Link: https://github.com/walle/lll
+    - lll
+
+    # Corrects commonly misspelled English words.
+    # Link: https://github.com/client9/misspell
+    - misspell
+
+    # Checks for struct fields that must have specific tags.
+    # Additional info: Part of golangci-lint built-ins.
+    - musttag
+
+    # Warns about naked returns.
+    # Link: https://github.com/alexkohler/nakedret
+    - nakedret
+
+    # Detects nested if statements.
+    # Link: https://github.com/nakabonne/nestif
+    - nestif
+
+    # Finds returning nil in case of error.
+    # Additional info: Part of golangci-lint built-ins.
+    - nilerr
+
+    # Checks for if conditions that compare values against both nil and non-nil values.
+    # Additional info: Part of golangci-lint built-ins.
+    - nilnil
+
+    # Forces a newline before return and branch statements.
+    # Link: https://github.com/ssgreg/nlreturn
+    - nlreturn
+
+    # Detects sending http request without context.
+    # Link: https://github.com/sonatard/noctx
+    - noctx
+
+    # Checks for ineffective nolint directives.
+    # Link: https://github.com/golangci/nolintlint
+    - nolintlint
+
+    # Disallows named return values.
+    # Additional info: Part of golangci-lint built-ins.
+    - nonamedreturns
+
+    # Prohibits Sprintf for host:port addresses.
+    # Additional info: Part of golangci-lint built-ins.
+    - nosprintfhostport
+
+    # Suggests preallocation of slices to optimize performance.
+    # Link: https://github.com/alexkohler/prealloc
+    - prealloc
+
+    # Warns about usage of predeclared identifiers, which can improve code readability.
+    # Link: https://github.com/nishanths/predeclared
+    - predeclared
+
+    # Detects reassignment of variables before their first use.
+    # Additional info: Part of golangci-lint built-ins.
+    - reassign
+
+    # Fast, configurable, extensible, flexible, and beautiful linter for Go. Fork of golint.
+    # Link: https://github.com/mgechev/revive
+    - revive
+
+    # Go static analysis tool that finds bugs, performance issues, and more.
+    # Link: https://staticcheck.io/
+    - staticcheck
+
+    # Style checks for Go. Part of staticcheck.
+    # Link: https://staticcheck.io/docs/checks#stylecheck
+    - stylecheck
+
+    # Remove unnecessary type conversions.
+    # Link: https://github.com/mdempsky/unconvert
+    - unconvert
+
+    # Reports unused function parameters.
+    # Link: https://github.com/mvdan/unparam
+    - unparam
+
+    # Suggests using constants from the standard library.
+    # Link: https://github.com/leighmcculloch/gochecknousestdlibvars
+    - usestdlibvars
+
+    # Limits the length of variable names.
+    # Additional info: Part of golangci-lint built-ins.
+    - varnamelen
+
+    # Detects assignments that will be overwritten before use.
+    # Additional info: Part of golangci-lint built-ins.
+    - wastedassign
+
+    # Detects leading and trailing whitespace.
+    # Additional info: Part of golangci-lint built-ins.
+    - whitespace
+
+    # Checks that errors from external packages are wrapped.
+    # Link: https://github.com/tomarrell/wrapcheck
+    - wrapcheck
+
+    # Enforces whitespace to start a line in Go files.
+    # Link: https://github.com/bombsimon/wsl
+    - wsl
+
+issues:
+  max-issues-per-linter: 0 # Maximum issues count per one linter.
+
+  max-same-issues: 0 # Maximum count of issues with the same text.
+
+  new: false # Show only new issues
+
+  # Fix found issues (if it's supported by the linter).
+  # I DO NOT want to AUTOFIX issues
+  # We have to do it by hands to memorize it
+  fix: false
+
+  exclude-rules:
+    - linters:
+        - varnamelen
+      text: "parameter name '(w|r)' is too short for the scope of its usage"
+    - linters:
+        - errcheck
+      text: "Error return value of `(.*).Write` is not checked"
+
+linters-settings:
+  cyclop:
+    # The maximal code complexity to report.
+    max-complexity: 10
+    # Should ignore tests.
+    skip-tests: true
+
+  decorder:
+    dec-order:
+      - type
+      - const
+      - var
+      - func
+    disable-dec-order-check: false # If true, order of declarations is not checked at all.
+    disable-init-func-first-check: false # If true, `init` func can be anywhere in file (does not have to be declared before all other functions)
+    disable-dec-num-check: false # If true, multiple global `type`, `const` and `var` declarations are allowed.
+    disable-type-dec-num-check: false # If true, type declarations will be ignored for dec num check
+    disable-const-dec-num-check: false # If true, const declarations will be ignored for dec num check
+    disable-var-dec-num-check: false # If true, var declarations will be ignored for dec num check
+
+  dogsled:
+    max-blank-identifiers: 2 # Checks assignments with too many blank identifiers. (e.g. x, , , _, := f()).
+
+  dupl:
+    # Tokens count to trigger issue.
+    # Default: 150
+    threshold: 100
+
+  errcheck:
+    check-type-assertions: true # Report about not checking of errors in type assertions: `a := b.(MyStruct)`.
+    check-blank: true # report about assignment of errors to blank identifier: `num, _ := strconv.Atoi(numStr)`.
+
+  errchkjson:
+    check-error-free-encoding: true
+    report-no-exported: true
+
+  errorlint:
+    # Check whether fmt.Errorf uses the %w verb for formatting errors.
+    # See the https://github.com/polyfloyd/go-errorlint for caveats.
+    errorf: true
+    # Permit more than 1 %w verb, valid per Go 1.20 (Requires errorf:true)
+    errorf-multi: true
+    # Check for plain type assertions and type switches.
+    asserts: true
+    # Check for plain error comparisons.
+    comparison: true
+
+  forbidigo:
+    forbid:
+      - p: "^fmt\\.Print(|f|ln)$"
+        msg: "Using fmt for logging is forbidden"
+      - p: "^log\\.Print(|f|ln)$"
+        msg: "Using log.Print statements is forbidden - specify log level directly!"
+      - p: "^(print|println)$"
+        msg: "Do NOT use built-in methods for output"
+
+  funlen:
+    # Checks the number of lines in a function.
+    lines: 40
+    # Checks the number of statements in a function.
+    statements: 20
+    # Ignore comments when counting lines.
+    ignore-comments: true
+
+  gocognit:
+    # Minimal code complexity to report.
+    # Default: 30 (but we recommend 10-20)
+    min-complexity: 10
+
+  goconst:
+    min-len: 5 # Minimal length of string constant.
+    min-occurrences: 5 # Minimum occurrences of constant string count to trigger issue.
+    ignore-tests: false # Ignore test files.
+    match-constant: true # Look for existing constants matching the values.
+    numbers: true # Search also for duplicated numbers.
+    ignore-calls: true # Ignore when constant is not used as function argument.
+
+  gocritic:
+    # https://go-critic.com/overview#checks-overview.
+    enabled-checks:
+      - appendAssign
+      - appendCombine
+      - argOrder
+      - assignOp
+      - badCall
+      - badCond
+      - builtinShadow
+      - builtinShadowDecl
+      - captLocal
+      - caseOrder # ?
+      - commentFormatting
+      - commentedOutCode # ?
+      - commentedOutImport
+      - defaultCaseOrder
+      - deferInLoop
+      - deferUnlambda
+      - deprecatedComment
+      - dupArg
+      - dupBranchBody
+      - dupImport
+      - dupSubExpr
+      - elseif
+      - emptyStringTest
+      - equalFold
+      - evalOrder
+      - exitAfterDefer
+      - hexLiteral
+      - httpNoBody
+      - hugeParam
+      - ifElseChain
+      - importShadow
+      - mapKey
+      - newDeref
+      - nilValReturn
+      - offBy1
+      - paramTypeCombine
+      - regexpMust
+
+  gocyclo:
+    min-complexity: 10 # Minimal code complexity to report.
+
+  godot:
+    scope: all # Comments to be checked: `declarations`, `toplevel`, or `all`.
+    exclude:
+      - "^todo:"
+    period: false # Check that each sentence ends with a period.
+    capital: true # Check that each sentence starts with a capital letter.
+
+  gofmt:
+    # Simplify code: gofmt with `-s` option.
+    simplify: true
+    # Apply the rewrite rules to the source before reformatting.
+    # https://pkg.go.dev/cmd/gofmt
+    rewrite-rules:
+      - pattern: "interface{}"
+        replacement: "any"
+
+  gofumpt:
+    extra-rules: true # Choose whether to use the extra rules.
+    module-path: pingpongpoc
+
+  golint:
+    min-confidence: 0.7 # Minimal confidence for issues.
+
+  gomnd:
+    # List of enabled checks, see https://github.com/tommy-muehle/go-mnd/#checks for description.
+    checks:
+      - argument
+      - case
+      - condition
+      - operation
+      - return
+      - assign
+
+    ignored-numbers:
+      - "0666"
+      - "0755"
+
+  gosimple:
+    # Sxxxx checks in https://staticcheck.io/docs/configuration/options/#checks
+    checks: ["all"] # https://staticcheck.dev/docs/checks/
+
+  gosec:
+    # To select a subset of rules to run.
+    # Available rules: https://github.com/securego/gosec#available-rules
+    includes:
+      - G101 # Look for hard coded credentials
+      - G102 # Bind to all interfaces
+      - G103 # Audit the use of unsafe block
+      - G104 # Audit errors not checked
+      - G106 # Audit the use of ssh.InsecureIgnoreHostKey
+      - G107 # Url provided to HTTP request as taint input
+      - G108 # Profiling endpoint automatically exposed on /debug/pprof
+      - G109 # Potential Integer overflow made by strconv.Atoi result conversion to int16/32
+      - G110 # Potential DoS vulnerability via decompression bomb
+      - G111 # Potential directory traversal
+      - G112 # Potential slowloris attack
+      - G113 # Usage of Rat.SetString in math/big with an overflow (CVE-2022-23772)
+      - G114 # Use of net/http serve function that has no support for setting timeouts
+      - G201 # SQL query construction using format string
+      - G202 # SQL query construction using string concatenation
+      - G203 # Use of unescaped data in HTML templates
+      - G204 # Audit use of command execution
+      - G301 # Poor file permissions used when creating a directory
+      - G302 # Poor file permissions used with chmod
+      - G303 # Creating tempfile using a predictable path
+      - G304 # File path provided as taint input
+      - G305 # File traversal when extracting zip/tar archive
+      - G306 # Poor file permissions used when writing to a new file
+      - G307 # Poor file permissions used when creating a file with os.Create
+      - G401 # Detect the usage of DES, RC4, MD5 or SHA1
+      - G402 # Look for bad TLS connection settings
+      - G403 # Ensure minimum RSA key length of 2048 bits
+      - G404 # Insecure random number source (rand)
+      - G501 # Import blocklist: crypto/md5
+      - G502 # Import blocklist: crypto/des
+      - G503 # Import blocklist: crypto/rc4
+      - G504 # Import blocklist: net/http/cgi
+      - G505 # Import blocklist: crypto/sha1
+      - G601 # Implicit memory aliasing of items from a range statement
+      - G602 # Slice access out of bounds
+
+    exclude-generated: false
+    # Filter out the issues with a lower severity than the given value.
+    severity: low # Valid options are: low, medium, high.
+    # # Filter out the issues with a lower confidence than the given value.
+    confidence: low # Valid options are: low, medium, high.
+
+  govet:
+    enable-all: true # Enable all analyzers.
+    check-shadowing: true # Report about shadowed variables.
+    settings:
+      shadow:
+        strict: true # Whether to be strict about shadowing; can be noisy.
+
+  lll:
+    line-length: 120 # Max line length, lines longer will be reported.
+    tab-width: 1 # Tab width in spaces.
+
+  misspell:
+    # Correct spellings using locale preferences for US or UK.
+    # Setting locale to US will correct the British spelling of 'colour' to 'color'.
+    # Default is to use a neutral variety of English.
+    locale: US
+    ignore-words:
+      - sekaid
+      - interx
+
+  predeclared: # Find code that shadows one of Go's predeclared identifiers.
+    ignore: "recover" # Comma-separated list of predeclared identifiers to not report on.
+
+  staticcheck:
+    # SAxxxx checks in https://staticcheck.io/docs/configuration/options/#checks
+    checks: ["all"] # https://staticcheck.dev/docs/checks/
+
+  stylecheck:
+    checks: ["all"]
+
+  usestdlibvars:
+    http-method: false # Suggest the use of http.MethodXX.
+    http-status-code: false # Suggest the use of http.StatusXX.
+    time-weekday: true # Suggest the use of time.Weekday.String().
+    time-month: true # Suggest the use of time.Month.String().
+    time-layout: true # Suggest the use of time.Layout.
+    crypto-hash: true # Suggest the use of crypto.Hash.String().
+    default-rpc-path: true # Suggest the use of rpc.DefaultXXPath.
+    sql-isolation-level: true # Suggest the use of sql.LevelXX.String().
+    tls-signature-scheme: true # Suggest the use of tls.SignatureScheme.String().
+    constant-kind: true # Suggest the use of constant.Kind.String().
+
+  unparam:
+    check-exported: true
