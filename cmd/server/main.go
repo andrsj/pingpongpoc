@@ -9,9 +9,9 @@ import (
 	"syscall"
 
 	"pingpongpoc/internal/constants"
-	tcp "pingpongpoc/internal/transport/http/server/tcp"
-	unix "pingpongpoc/internal/transport/http/server/unix"
-	unixServer "pingpongpoc/internal/transport/unix/server"
+	"pingpongpoc/internal/transport/http/server/tcp"
+	"pingpongpoc/internal/transport/http/server/unix"
+	nakedUnixServer "pingpongpoc/internal/transport/unix/server"
 )
 
 //nolint:funlen,gocognit
@@ -28,7 +28,7 @@ func main() {
 
 	server1 := tcp.NewServer(constants.HTTPListenAddressTCPServer, logger)
 	server2 := unix.NewServer(constants.PathToSocketHTTPUnixServer, logger)
-	server3 := unixServer.NewServer(constants.PathToSocketUnixServer, logger)
+	server3 := nakedUnixServer.NewServer(constants.PathToSocketUnixServer, logger)
 
 	mainContext, mainCancelFunc := context.WithCancel(context.Background())
 	defer mainCancelFunc()
