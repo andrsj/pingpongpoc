@@ -7,13 +7,16 @@ import (
 	"net"
 	"os"
 	"sync"
-	"time"
 
 	pingpongFilter "pingpongpoc/internal/domain/pingpong/filter"
 	pingpongValidator "pingpongpoc/internal/domain/pingpong/validator"
 	pingpongService "pingpongpoc/internal/service/pingpong"
 	"pingpongpoc/internal/transport/unix/handler"
 )
+
+// ! IMPORTANT !
+// IS NOT FULLY WORKED CODE
+// Graceful shutdown doesn't work properly
 
 // Server represents a server listening on a Unix socket.
 type (
@@ -34,9 +37,7 @@ type (
 	}
 )
 
-const connectionTimeout = 10 * time.Second
-
-func New(socketPath string, logger *slog.Logger) *Server {
+func NewServer(socketPath string, logger *slog.Logger) *Server {
 	service := pingpongService.NewService(
 		pingpongFilter.New(logger),
 		pingpongValidator.New(logger),
@@ -106,12 +107,17 @@ func (s *Server) Listen() error {
 			}
 		}
 
+		// TODO make better connections registration
+
 		s.connLock.Lock()
 		s.connections[conn] = struct{}{}
 		s.connLock.Unlock()
 
+		// TODO add routing
+
 		go func(connection net.Conn) {
 			connectionContext, cancel := context.WithCancel(s.shutdownCtx)
+			// TODO make correct graceful shutdown
 			defer func() {
 				cancel()
 				connection.Close()

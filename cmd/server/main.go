@@ -7,21 +7,16 @@ import (
 	"os/signal"
 	"sync"
 	"syscall"
-	"time"
 
-	httpServer "pingpongpoc/internal/transport/http/server"
+	"pingpongpoc/internal/constants"
+	tcp "pingpongpoc/internal/transport/http/server/tcp"
+	unix "pingpongpoc/internal/transport/http/server/unix"
 	unixServer "pingpongpoc/internal/transport/unix/server"
-)
-
-const (
-	shutdownTimeout            = 5 * time.Second
-	httpListenAddressTCPServer = ":8080"
-	pathToSocketHTTPUnixServer = "/tmp/pingpong1.sock"
-	pathToSocketUnixServer     = "/tmp/pingpong2.sock"
 )
 
 //nolint:funlen,gocognit
 func main() {
+	//nolint:exhaustruct
 	opts := &slog.HandlerOptions{
 		Level: slog.LevelDebug,
 		// AddSource: true,
@@ -31,9 +26,9 @@ func main() {
 	// logger := slog.New(slog.NewTextHandler(os.Stdout, opts))
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, opts))
 
-	server1 := httpServer.NewTCPServer(httpListenAddressTCPServer, logger)
-	server2 := httpServer.NewUnixServer(pathToSocketHTTPUnixServer, logger)
-	server3 := unixServer.New(pathToSocketUnixServer, logger)
+	server1 := tcp.NewServer(constants.HTTPListenAddressTCPServer, logger)
+	server2 := unix.NewServer(constants.PathToSocketHTTPUnixServer, logger)
+	server3 := unixServer.NewServer(constants.PathToSocketUnixServer, logger)
 
 	mainContext, mainCancelFunc := context.WithCancel(context.Background())
 	defer mainCancelFunc()
@@ -46,7 +41,7 @@ func main() {
 		logger.Info("Received shutdown signal")
 
 		// Create a context for the shutdown process with a timeout.
-		shutdownCtx, cancelShutdown := context.WithTimeout(context.Background(), shutdownTimeout)
+		shutdownCtx, cancelShutdown := context.WithTimeout(context.Background(), constants.ShutdownTimeout)
 		defer cancelShutdown()
 
 		waitGroup := sync.WaitGroup{}

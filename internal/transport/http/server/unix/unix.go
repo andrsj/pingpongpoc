@@ -9,22 +9,23 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/go-chi/chi/v5"
+
+	"pingpongpoc/internal/constants"
 	pingpongFilter "pingpongpoc/internal/domain/pingpong/filter"
 	pingpongValidator "pingpongpoc/internal/domain/pingpong/validator"
 	pingpongService "pingpongpoc/internal/service/pingpong"
 	"pingpongpoc/internal/transport/http/handler"
-
-	"github.com/go-chi/chi/v5"
 )
 
-// UnixServer encapsulates the HTTP server over a Unix socket.
-type UnixServer struct {
+// Server encapsulates the HTTP server over a Unix socket.
+type Server struct {
 	log        *slog.Logger
 	server     *http.Server
 	socketPath string
 }
 
-func NewUnixServer(socketPath string, logger *slog.Logger) *UnixServer {
+func NewServer(socketPath string, logger *slog.Logger) *Server {
 	router := chi.NewRouter()
 
 	service := pingpongService.NewService(
@@ -36,17 +37,17 @@ func NewUnixServer(socketPath string, logger *slog.Logger) *UnixServer {
 
 	router.Get("/", pingHandler.Ping)
 
-	return &UnixServer{
+	return &Server{
 		server: &http.Server{ //nolint:exhaustruct
 			Handler:           router,
-			ReadHeaderTimeout: readHeadTimeout,
+			ReadHeaderTimeout: constants.ReadHeadTimeout,
 		},
 		log:        logger,
 		socketPath: socketPath,
 	}
 }
 
-func (s *UnixServer) Start() error {
+func (s *Server) Start() error {
 	if err := os.RemoveAll(s.socketPath); err != nil {
 		s.log.Error("Failed to remove existing socket file", "error", err)
 
@@ -73,7 +74,7 @@ func (s *UnixServer) Start() error {
 	return nil
 }
 
-func (s *UnixServer) Shutdown(ctx context.Context) error {
+func (s *Server) Shutdown(ctx context.Context) error {
 	if err := s.server.Shutdown(ctx); err != nil {
 		s.log.Error("Failed shutting down server", "error", err)
 

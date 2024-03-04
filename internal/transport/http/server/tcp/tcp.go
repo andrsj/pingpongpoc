@@ -6,29 +6,24 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
-	"time"
 
+	"github.com/go-chi/chi/v5"
+
+	"pingpongpoc/internal/constants"
 	pingpongFilter "pingpongpoc/internal/domain/pingpong/filter"
 	pingpongValidator "pingpongpoc/internal/domain/pingpong/validator"
 	pingpongService "pingpongpoc/internal/service/pingpong"
 	"pingpongpoc/internal/transport/http/handler"
-
-	"github.com/go-chi/chi/v5"
 )
 
-// TCPServer encapsulates the HTTP server.
-type TCPServer struct {
+// Server encapsulates the HTTP server.
+type Server struct {
 	log    *slog.Logger
 	server *http.Server
 }
 
-const (
-	readHeadTimeout = 5 * time.Second
-	shutdownTimeout = 5 * time.Second
-)
-
-// NewTCPServer creates a new Server instance.
-func NewTCPServer(addr string, logger *slog.Logger) *TCPServer {
+// NewServer creates a new Server instance.
+func NewServer(addr string, logger *slog.Logger) *Server {
 	router := chi.NewRouter()
 
 	service := pingpongService.NewService(
@@ -41,18 +36,18 @@ func NewTCPServer(addr string, logger *slog.Logger) *TCPServer {
 	router.Get("/", pingHandler.Ping)
 
 	//nolint:exhaustruct
-	return &TCPServer{
+	return &Server{
 		server: &http.Server{
 			Addr:              addr,
 			Handler:           router,
-			ReadHeaderTimeout: readHeadTimeout,
+			ReadHeaderTimeout: constants.ReadHeadTimeout,
 		},
 		log: logger,
 	}
 }
 
 // Start tarts the server.
-func (s *TCPServer) Start() error {
+func (s *Server) Start() error {
 	s.log.Info("Starting server", "address", s.server.Addr)
 
 	err := s.server.ListenAndServe()
@@ -65,7 +60,7 @@ func (s *TCPServer) Start() error {
 	return nil
 }
 
-func (s *TCPServer) Shutdown(ctx context.Context) error {
+func (s *Server) Shutdown(ctx context.Context) error {
 	if err := s.server.Shutdown(ctx); err != nil {
 		s.log.Error(
 			"Failed shutting down server",
