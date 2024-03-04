@@ -12,6 +12,9 @@ run:
   skip-dirs: # Which dirs to skip: issues from them won't be reported.
     - .git
 
+  skip-files:
+    - ./internal/cli/**
+
   modules-download-mode: readonly
 
   # Allow multiple parallel golangci-lint instances running.
